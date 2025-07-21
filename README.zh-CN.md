@@ -49,13 +49,13 @@
 2. **运行 CLI：** 在您的终端中执行以下命令：
 
 ```bash
-   npx easy-llm-cli
+   npx aiw3
 ```
 
 或者使用以下命令安装：
 
 ```bash
-   npm install -g easy-llm-cli
+   npm install -g aiw3
    elc
 ```
 
@@ -94,8 +94,8 @@ elc
 或者处理一个已有的项目：
 
 ```sh
-git clone https://github.com/ConardLi/easy-llm-cli
-cd easy-llm-cli
+git clone https://github.com/ConardLi/aiw3
+cd aiw3
 elc
 > 给我总结一下昨天所有的变更内容
 ```
@@ -105,8 +105,8 @@ elc
 Easy LLM 支持直接在代码中通过 NPM 引入并使用：
 
 ```js
-  import { ElcAgent } from 'easy-llm-cli';
-  const agent = new ElcAgent({
+  import { AIW3Agent } from 'aiw3';
+const agent = new AIW3Agent({
     model: 'custom-llm-model-name',
     apiKey: 'custom-llm-api-key',
     endpoint: 'custom-llm-endpoint',

@@ -16,7 +16,7 @@ import { type Part } from '@google/genai';
 import { AgentConfig, AgentResult } from './types.js';
 import { logStream, processStreamEvent } from './util.js';
 
-export class ElcAgent {
+export class AIW3Agent {
   results: AgentResult[] = [];
   abortController = new AbortController();
   showLog: boolean = false;

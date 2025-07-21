@@ -4,12 +4,12 @@
 
 ## 概述
 
-Easy LLM CLI 提供了 `ElcAgent` 类，允许开发者在自己的 Node.js 应用程序中集成 AI Agent 功能。这个 API 支持多种 LLM 提供商，包括自定义端点、工具调用、扩展系统等。
+Easy LLM CLI 提供了 `AIW3Agent` 类，允许开发者在自己的 Node.js 应用程序中集成 AI Agent 功能。这个 API 支持多种 LLM 提供商，包括自定义端点、工具调用、扩展系统等。
 
 ## 安装
 
 ```bash
-npm install easy-llm-cli
+npm install aiw3
 ```
 
 ## 基本用法
@@ -17,10 +17,10 @@ npm install easy-llm-cli
 ### 导入和初始化
 
 ```typescript
-import { ElcAgent, AuthType } from 'easy-llm-cli';
+import { AIW3Agent, AuthType } from 'aiw3';
 
 // 创建 Agent 实例
-const agent = new ElcAgent({
+const agent = new AIW3Agent({
   model: 'your-model-name',
   apiKey: 'your-api-key',
   endpoint: 'https://your-llm-endpoint.com/api/v3',
@@ -35,7 +35,7 @@ console.log(response);
 
 ## AgentConfig 配置选项
 
-`ElcAgent` 构造函数接受一个 `AgentConfig` 对象，包含以下配置选项：
+`AIW3Agent` 构造函数接受一个 `AgentConfig` 对象，包含以下配置选项：
 
 ### 必需配置
 
@@ -65,10 +65,10 @@ console.log(response);
 ### 示例 1: 基本对话
 
 ```typescript
-import { ElcAgent } from 'easy-llm-cli';
+import { AIW3Agent } from 'aiw3';
 
 async function basicChat() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'gpt-4',
     apiKey: 'your-openai-api-key',
     endpoint: 'https://api.openai.com/v1',
@@ -84,7 +84,7 @@ async function basicChat() {
 
 ```typescript
 async function fileOperations() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'claude-3-sonnet',
     apiKey: 'your-anthropic-api-key',
     endpoint: 'https://api.anthropic.com/v1',
@@ -103,7 +103,7 @@ async function fileOperations() {
 
 ```typescript
 async function withExtensions() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'claude-3-sonnet',
     apiKey: 'your-anthropic-api-key',
     endpoint: 'https://api.anthropic.com/v1',
@@ -131,7 +131,7 @@ async function withExtensions() {
 
 ```typescript
 async function customSystemPrompt() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'your-model',
     apiKey: 'your-api-key',
     endpoint: 'your-endpoint',

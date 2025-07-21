@@ -4,12 +4,12 @@ This document introduces how to directly invoke the Agent functionality of Easy 
 
 ## Overview
 
-Easy LLM CLI provides the `ElcAgent` class, allowing developers to integrate AI Agent capabilities into their own Node.js applications. This API supports multiple LLM providers, including custom endpoints, tool invocation, and system extensions.
+Easy LLM CLI provides the `AIW3Agent` class, allowing developers to integrate AI Agent capabilities into their own Node.js applications. This API supports multiple LLM providers, including custom endpoints, tool invocation, and system extensions.
 
 ## Installation
 
 ```js
-npm install easy-llm-cli
+npm install aiw3
 ```
 
 ## Basic Usage
@@ -17,10 +17,10 @@ npm install easy-llm-cli
 ### Import and Initialization
 
 ```js
-import { ElcAgent, AuthType } from 'easy-llm-cli';
+import { AIW3Agent, AuthType } from 'aiw3';
 
 // Create an Agent instance
-const agent = new ElcAgent({
+const agent = new AIW3Agent({
   model: 'your-model-name',
   apiKey: 'your-api-key',
   endpoint: 'https://your-llm-endpoint.com/api/v3',
@@ -36,7 +36,7 @@ console.log(response);
 
 ## AgentConfig Configuration Options
 
-The `ElcAgent` constructor accepts an `AgentConfig` object with the following configuration options:
+The `AIW3Agent` constructor accepts an `AgentConfig` object with the following configuration options:
 
 ### Required Configuration
 
@@ -66,10 +66,10 @@ The `ElcAgent` constructor accepts an `AgentConfig` object with the following co
 ### Example 1: Basic Conversation
 
 ```js
-import { ElcAgent } from 'easy-llm-cli';
+import { AIW3Agent } from 'aiw3';
 
 async function basicChat() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'gpt-4',
     apiKey: 'your-openai-api-key',
     endpoint: 'https://api.openai.com/v1',
@@ -85,7 +85,7 @@ async function basicChat() {
 
 ```js
 async function fileOperations() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'claude-3-sonnet',
     apiKey: 'your-anthropic-api-key',
     endpoint: 'https://api.anthropic.com/v1',
@@ -104,7 +104,7 @@ async function fileOperations() {
 
 ```js
 async function withExtensions() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'claude-3-sonnet',
     apiKey: 'your-anthropic-api-key',
     endpoint: 'https://api.anthropic.com/v1',
@@ -132,7 +132,7 @@ async function withExtensions() {
 
 ```js
 async function customSystemPrompt() {
-  const agent = new ElcAgent({
+  const agent = new AIW3Agent({
     model: 'your-model',
     apiKey: 'your-api-key',
     endpoint: 'your-endpoint',

@@ -27,13 +27,11 @@ export default tseslint.config(
   {
     // Global ignores
     ignores: [
-      'node_modules/*',
+      'node_modules',
       'eslint.config.js',
-      'packages/cli/dist/**',
-      'packages/core/dist/**',
-      'packages/server/dist/**',
-      'eslint-rules/*',
-      'bundle/**',
+      'packages/*/dist/**',
+      'eslint-rules',
+      'bundle',
     ],
   },
   eslint.configs.recommended,
@@ -90,7 +88,7 @@ export default tseslint.config(
         'error',
         { accessibility: 'no-public' },
       ],
-      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-inferrable-types': [
         'error',
         { ignoreParameters: true, ignoreProperties: true },
@@ -98,8 +96,7 @@ export default tseslint.config(
       '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],
       '@typescript-eslint/no-unused-vars': [
         'error',
-        {
-          argsIgnorePattern: '^_',
+        { argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
         },
@@ -133,7 +130,6 @@ export default tseslint.config(
       'prefer-const': ['error', { destructuring: 'all' }],
       radix: 'error',
       'default-case': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
   {
@@ -149,16 +145,7 @@ export default tseslint.config(
         console: 'readonly',
       },
     },
-    rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
-    },
+    rules: {},
   },
   // Prettier config must be last
   prettierConfig,
@@ -172,16 +159,7 @@ export default tseslint.config(
         console: 'readonly',
       },
     },
-    rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
-    },
+    rules: {},
   },
   // Custom eslint rules for this repo
   {
