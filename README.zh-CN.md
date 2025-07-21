@@ -1,186 +1,299 @@
-
-
-![Easy LLM CLI 截图](./docs/assets/AIW3-LLM-CLI-Screenshot.png)
+![AIW3 CLI 截图](./docs/assets/AIW3-LLM-CLI-Screenshot.png)
 
 <div align="center">
 
-<h4> 一个与多种大语言模型（LLM）兼容的开源 AI Agent CLI（Gemini ClI 的 Fork 版本）。  </h4>
+<h4>兼容多种大语言模型（LLM）的开源 AI Agent CLI。</h4>
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
 </div>
 
-这个仓库包含了 Easy LLM CLI（[Gemini ClI](https://github.com/google-gemini/gemini-cli)  的 Fork 版本），一个连接到您的工具、理解您的代码并加速您工作流程的命令行 AI 工具。它支持多种 LLM 提供商，包括 Gemini、OpenAI 以及任何遵循 OpenAI API 格式的自定义 LLM API。
+# AIW3 - 多 LLM AI 工作流 CLI
 
-使用 Easy LLM CLI，您可以：
+AIW3 是一个强大的命令行 AI 工具，能够连接到您的工具，理解代码，加速开发流程。最初从 Google 的 Gemini CLI 派生，现支持多种 LLM 提供商，包括 Gemini、OpenAI，以及任何符合 OpenAI 格式的自定义 LLM API。
 
-- 利用先进的 LLM 能力查询和编辑大型代码库，支持大上下文窗口
-- 使用多模态能力从 PDF 或草图生成新应用
-- 自动化操作任务，如查询 Pull Request 或处理复杂的 rebase 操作
-- 使用工具和 MCP 服务器连接新功能
-- 通过简单的环境变量配置和使用您首选的 LLM 提供商
-- 在不改变工作流程的情况下无缝切换不同的 LLM 提供商
+## ✨ 主要特性
 
-<hr />
+- **🔗 多 LLM 支持**：连接到 Gemini、OpenAI、Claude 或任意 OpenAI 兼容 API
+- **🛠️ 丰富工具生态**：提供 6 个核心工具，用于文件操作、内容搜索和数据管理
+- **🔌 MCP 集成**：支持 Model Context Protocol (MCP) 服务器以扩展功能
+- **📝 代码库智能**：利用先进 LLM 功能查询和编辑大型代码库
+- **🖼️ 多模态支持**：处理图像、PDF，并从草图生成应用
+- **🤖 工作流自动化**：自动化复杂开发任务，如 PR 分析和代码重构
+- **📦 编程 API**：使用 AIW3Agent 类将 AI 功能集成到应用程序中
+- **🔒 安全执行**：容器化沙盒确保工具安全运行
+- **🎨 可扩展架构**：插件系统支持自定义工具和集成
 
-本方案已经对多种不同提供商、模型以及本地部署的模型进行了多个维度（是否具备思考过程、能否完成简单任务、是否具备工具调用能力、是否具备多模态能力、是否具备复杂任务能力、是否可以统计 Toekn）的测试，以下是测试结果：
+## 🚀 快速开始
 
-|  模型 | 思考过程 | 简单任务 | 工具调用 | MCP 调用 | 复杂任务 | 多模态 | Token 统计 |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 【Google】Gemini-2.5-pro | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 【OpenRouter】Claude Sonnet 4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 【OpenRouter】Gpt-4.1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 【OpenRouter】Grok-4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 【Volcengine】Doubao-Seed-1.6 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 【Bailian】Qwen3-Plus | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 【Moonshot】kimi-k2 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| 【Volcengine】DeepSeek-R1 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| 【Siliconflow】DeepSeek-R1 | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| 【Volcengine】Doubao-1.5-Pro | ❌ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ |
-| 【Volcengine】DeepSeek-V3 | ❌ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ |
-| 【Bailian】Qwen3-235b-a22b | ✅ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ |
-| 【vLLM】Qwen2.5-7B-Instruct | ❌ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ |
-| 【vLLM】DeepSeek-R1--32B | ✅ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ |
-| 【Ollama】Qwen2.5-7B-Instruct | ❌ | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ |
+### 前提条件
+- Node.js 20 或更高版本
+- npm 或 yarn 包管理器
+- 您选择的 LLM 提供商的 API 密钥
 
-## 快速开始
+### 安装方法
 
-1. **前提条件：** 确保您安装了 [Node.js 20 版本](https://nodejs.org/en/download) 或更高版本。
-2. **运行 CLI：** 在您的终端中执行以下命令：
+#### 方法 1：NPX（快速测试）
+```bash
+npx aiw3 --help
+```
+
+#### 方法 2：全局安装（当前不可用）
+```bash
+npm install -g aiw3  # 可能因构建问题失败
+```
+
+#### 方法 3：从源码构建（推荐）
 
 ```bash
-   npx aiw3
+git clone https://github.com/tonycai/aiw3-llm-cli.git
+cd aiw3-llm-cli
+npm install --ignore-scripts
+node scripts/generate-git-commit-info.js
+
+cd packages/core && npm run build
+cd ../cli && npm run build
+cd ../../
+
+node esbuild.config.js
+mkdir -p ~/bin
+echo '#!/bin/bash\nnode "'$(pwd)'/bundle/gemini.js" "$@"' > ~/bin/aiw3
+chmod +x ~/bin/aiw3
+export PATH="$HOME/bin:$PATH"
 ```
 
-或者使用以下命令安装：
+### 初次运行
 
 ```bash
-   npm install -g aiw3
-   elc
+aiw3 --version
+aiw3 -p "Hello! What tools are available?"
 ```
 
-## 自定义 LLM 配置
+## ⚙️ 配置
 
-Easy LLM 命令行工具支持连接到任何兼容 OpenAI 的 LLM API。你可以使用以下环境变量配置首选的 LLM：
+### 环境配置
+
+创建 `.env` 文件或设置环境变量：
+
+#### OpenAI（推荐初学者）
+```bash
+USE_CUSTOM_LLM=true
+CUSTOM_LLM_PROVIDER=openai
+CUSTOM_LLM_API_KEY=your-openai-api-key
+CUSTOM_LLM_ENDPOINT=https://api.openai.com/v1
+CUSTOM_LLM_MODEL_NAME=gpt-4o
+CUSTOM_LLM_TEMPERATURE=0.7
+CUSTOM_LLM_MAX_TOKENS=4096
+CUSTOM_LLM_TOP_P=1
+```
+
+#### Gemini（原始）
+```bash
+USE_CUSTOM_LLM=false
+GEMINI_API_KEY=your-gemini-api-key
+```
+
+### 设置（可选）
+
+创建 `.gemini/settings.json`：
+
+```json
+{
+  "selectedAuthType": "custom-llm-api",
+  "mcpServers": {}
+}
+```
+
+### 提供商示例
+
+<details>
+<summary>🔹 OpenAI GPT 模型</summary>
 
 ```bash
-# 启用自定义 LLM 支持
-export USE_CUSTOM_LLM=true
-export CUSTOM_LLM_API_KEY="your-api-key"     # 你的 LLM 提供商 API 密钥
-export CUSTOM_LLM_ENDPOINT="https://api.your-llm-provider.com/v1"  # API 端点
-export CUSTOM_LLM_MODEL_NAME="your-model-name"  # 模型名称
-
-# 可选参数
-export CUSTOM_LLM_TEMPERATURE=0.7  # 温度参数（默认值：0）
-export CUSTOM_LLM_MAX_TOKENS=8192  # 最大令牌数（默认值：8192）
-export CUSTOM_LLM_TOP_P=1          # Top P 参数（默认值：1）
+USE_CUSTOM_LLM=true
+CUSTOM_LLM_API_KEY="sk-proj-your-api-key"
+CUSTOM_LLM_ENDPOINT="https://api.openai.com/v1"
+CUSTOM_LLM_MODEL_NAME="gpt-4o"
+CUSTOM_LLM_PROVIDER="openai"
 ```
 
-当这些变量设置后，Easy LLM 命令行工具将使用你的自定义 LLM，而非默认的 Gemini 模型。
+**测试模型：**
+- `gpt-4o` - 128k 上下文（推荐）
+- `gpt-4` - 8k 上下文（可能达到令牌限制）
+- `gpt-3.5-turbo` - 4k 上下文（复杂任务有限）
+</details>
 
+<details>
+<summary>🔹 OpenRouter（Claude, GPT, Llama 等）</summary>
 
-## 示例
-
-一旦 CLI 运行起来，你就可以从 shell 中与 Gemini 交互了。
-
-你可以从新目录开始一个项目：
-
-```sh
-cd new-project/
-elc
-> 帮我写一个 Discord 机器人，它能使用我将要提供的 FAQ.md 文件来回答问题
+```bash
+USE_CUSTOM_LLM=true
+CUSTOM_LLM_API_KEY="sk-or-v1-your-key"
+CUSTOM_LLM_ENDPOINT="https://openrouter.ai/api/v1"
+CUSTOM_LLM_MODEL_NAME="anthropic/claude-3-sonnet"
+CUSTOM_LLM_PROVIDER="openrouter"
 ```
 
-或者处理一个已有的项目：
+**热门模型：**
+- `anthropic/claude-3-sonnet` - 高质量
+- `openai/gpt-4` - 使用 OpenRouter 的 OpenAI
+- `meta-llama/llama-3.1-70b` - 开源选项
+</details>
 
-```sh
-git clone https://github.com/ConardLi/aiw3
-cd aiw3
-elc
-> 给我总结一下昨天所有的变更内容
+<details>
+<summary>🔹 本地/自托管（vLLM, Ollama 等）</summary>
+
+```bash
+USE_CUSTOM_LLM=true
+CUSTOM_LLM_API_KEY="not-needed"
+CUSTOM_LLM_ENDPOINT="http://localhost:8000/v1"
+CUSTOM_LLM_MODEL_NAME="llama-3.1-70b"
+CUSTOM_LLM_PROVIDER="vllm"
+```
+</details>
+
+### 加载配置
+
+```bash
+source .env
+aiw3 -p "Test configuration"
 ```
 
-## 在代码中运行
+## 🧰 内置工具
 
-Easy LLM 支持直接在代码中通过 NPM 引入并使用：
+AIW3 包括 6 个核心工具：
 
-```js
-  import { AIW3Agent } from 'aiw3';
+- **`list_directory`**：目录浏览
+- **`read_file`**：文件读取
+- **`read_many_files`**：批量读取
+- **`search_file_content`**：内容搜索
+- **`glob`**：文件查找
+- **`save_memory`**：事实存储
+
+## 🔧 使用示例
+
+### 命令行模式
+```bash
+aiw3 -p "What is the structure of this project?"
+```
+
+### 交互模式
+```bash
+aiw3
+> What files are in this directory?
+```
+
+### 编程 API
+
+```javascript
+import { AIW3Agent } from 'aiw3';
+
 const agent = new AIW3Agent({
-    model: 'custom-llm-model-name',
-    apiKey: 'custom-llm-api-key',
-    endpoint: 'custom-llm-endpoint',
-    extension: {
-      mcpServers: {
-        chart: {
-          command: 'npx',
-          args: ['-y', '@antv/mcp-server-chart'],
-          trust: false
-        }
-      },
-      excludeTools: ['run_shell_command']
-    }
-  });
-  const result = await agent.run('请帮我生成一个销售数据的柱状图');
-  console.log(result);
+  model: 'gpt-4o',
+  apiKey: 'your-api-key',
+  endpoint: 'https://api.openai.com/v1',
+});
+
+const response = await agent.run('Analyze this project structure');
+console.log(response);
 ```
 
-- 查看 API 调用详细文档：[Programmatic API](./docs/programmatic-api.zh-CN.md)
+## 🔒 安全特性
 
-### 后续步骤
+- **环境配置**：API 密钥保存在环境变量
+- **只读模式**：禁用文件修改
+- **工具限制**：配置允许/阻止的工具
+- **沙盒执行**：容器中安全运行
+- **用户确认**：破坏性操作需批准
 
-- 了解如何[贡献代码或从源码构建](./CONTRIBUTING.md)。
-- 探索可用的**[CLI 命令](./docs/cli/commands.md)**。
-- 如果遇到任何问题，请查看**[故障排除指南](./docs/troubleshooting.md)**。
-- 如需更全面的文档，请参阅[完整文档](./docs/index.md)。
-- 查看一些[热门任务](#热门任务)获取更多灵感。
+## 🛠️ 故障排除
 
-### 故障排除
+### 常见问题
 
-如果遇到问题，请查看[故障排除](docs/troubleshooting.md)指南。
-
-## 热门任务
-
-### 探索新代码库
-
-首先进入一个已有的或新克隆的仓库，然后运行 `elc`。
-
-```text
-> 描述这个系统架构的主要组成部分。
+#### 令牌限制超出
+```
+Error: context_length_exceeded
+```
+**解决方案**：使用更大上下文窗口的模型。
+```bash
+CUSTOM_LLM_MODEL_NAME=gpt-4o
 ```
 
-```text
-> 有哪些安全机制在运行？
+#### MCP 服务器连接失败
+```
+failed to start or connect to MCP server 'puppeteer'
+```
+**解决方案**：禁用 MCP 服务器：
+```json
+{
+  "mcpServers": {}
+}
 ```
 
-### 处理现有代码
-
-```text
-> 为 GitHub 第 123 号 issue 实现初稿。
+#### 安装期间的构建问题
+```
+Error: Cannot find module 'node:path'
+```
+**解决方案**：从源码构建：
+```bash
+npm install --ignore-scripts
 ```
 
-```text
-> 帮我把这个代码库迁移到最新版本的 Java。先制定一个计划。
+#### API 认证错误
+```
+API Error: 401 Incorrect API key provided
+```
+**解决方案**：
+- 验证 API 密钥
+- 检查端点 URL
+- 确保加载环境变量：`source .env`
+
+#### 命令未找到
+```
+aiw3: command not found
+```
+**解决方案**：添加到 PATH：
+```bash
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-### 自动化工作流
+### 调试模式
 
-使用 MCP 服务器将本地系统工具与企业协作套件集成。
-
-```text
-> 制作一个幻灯片，展示过去 7 天的 git 历史，按功能和团队成员分组。
+```bash
+aiw3 --debug -p "your prompt"
 ```
 
-```text
-> 制作一个全屏网页应用，用于墙上显示器，展示我们互动最多的 GitHub 问题。
-```
+## 📚 文档
 
-### 与系统交互
+- **[架构概览](./docs/architecture.md)**
+- **[CLI 命令](./docs/cli/commands.md)**
+- **[工具文档](./docs/tools/index.md)**
+- **[MCP 集成](./docs/tools/mcp-server.md)**
+- **[配置指南](./docs/cli/configuration.md)**
+- **[贡献指南](./CONTRIBUTING.md)**
+- **[故障排除](./docs/troubleshooting.md)**
 
-```text
-> 将此目录中的所有图像转换为 png 格式，并根据 exif 数据中的日期重命名。
-```
+## 🤝 贡献
 
-```text
-> 按支出月份整理我的 PDF 发票。
-```
+欢迎贡献！请参阅[贡献指南](./CONTRIBUTING.md)了解详情。
+
+## 📄 许可证
+
+本项目根据 Apache License 2.0 许可。详见 [LICENSE](./LICENSE)。
+
+## 🙏 致谢
+
+- 基于 [Google 的 Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- 由 [Model Context Protocol](https://github.com/modelcontextprotocol) 提供可扩展性
+- 社区驱动开发和跨多个 LLM 提供商的测试
+
+---
+
+<div align="center">
+
+**[⭐ 给这个项目加星](https://github.com/tonycai/aiw3-llm-cli)** | **[📖 查看文档](./docs/index.md)** | **[🐛 报告问题](https://github.com/tonycai/aiw3-llm-cli/issues)**
+
+由 AIW3 社区用 ❤️ 制作
+
+</div>
