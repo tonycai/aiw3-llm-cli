@@ -1,7 +1,7 @@
 {
   "name": "aiw3",
   "version": "0.1.5",
-  "description": "Gemini CLI",
+  "description": "AIW3 - Multi-LLM AI Workflow CLI (supports OpenAI, Gemini, Claude & custom APIs)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tonycai/aiw3-llm-cli.git"
@@ -9,7 +9,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "gemini": "dist/index.js"
+    "aiw3": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",

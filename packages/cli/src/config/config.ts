@@ -57,10 +57,10 @@ interface CliArgs {
 
 async function parseArguments(): Promise<CliArgs> {
   const argv = await yargs(hideBin(process.argv))
-    .scriptName('gemini')
+    .scriptName('aiw3')
     .usage(
       '$0 [options]',
-      'Gemini CLI - Launch an interactive CLI, use -p/--prompt for non-interactive mode',
+      'AIW3 - Multi-LLM AI Workflow CLI. Launch an interactive session, use -p/--prompt for non-interactive mode',
     )
     .option('model', {
       alias: 'm',
