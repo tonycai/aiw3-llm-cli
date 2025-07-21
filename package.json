@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ConardLi/aiw3.git"
+    "url": "git+https://github.com/tonycai/aiw3-llm-cli.git"
   },
   "config": {
     "sandboxImageUri": "xx:0.1.0"
@@ -45,7 +45,7 @@
     "clean": "node scripts/clean.js"
   },
   "bin": {
-    "elc": "bundle/gemini.js"
+    "aiw3": "bundle/gemini.js"
   },
   "files": [
     "bundle/",
