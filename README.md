@@ -1,4 +1,4 @@
-![AIW3 CLI Screenshot](./docs/assets/openrouter.png)
+![AIW3 CLI Screenshot](./docs/assets/AIW3-LLM-CLI-Screenshot.png)
 
 <div align="center">
 
