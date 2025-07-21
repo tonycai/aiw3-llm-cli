@@ -1,6 +1,6 @@
 
 
-![Easy LLM CLI 截图](./docs/assets/openrouter.png)
+![Easy LLM CLI 截图](./docs/assets/AIW3-LLM-CLI-Screenshot.png)
 
 <div align="center">
 
