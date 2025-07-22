@@ -243,6 +243,14 @@ export class CoreToolScheduler {
     this.getPreferredEditor = options.getPreferredEditor;
   }
 
+  /**
+   * Determines if we should use sequential tool execution for AWS Bedrock Claude compatibility
+   */
+  private requiresSequentialExecution(): boolean {
+    const customProvider = process.env.CUSTOM_LLM_PROVIDER;
+    return customProvider === 'AWS-Bedrock-Claude' || process.env.FORCE_SEQUENTIAL_TOOLS === 'true';
+  }
+
   private setStatusInternal(
     targetCallId: string,
     status: 'success',
@@ -608,7 +616,109 @@ export class CoreToolScheduler {
     });
   }
 
+  /**
+   * Executes tools sequentially for AWS Bedrock Claude compatibility.
+   * AWS Bedrock Claude requires each tool_use to be immediately followed by tool_result.
+   */
+  private async attemptSequentialExecutionOfScheduledCalls(signal: AbortSignal): Promise<void> {
+    const allCallsFinalOrScheduled = this.toolCalls.every(
+      (call) =>
+        call.status === 'scheduled' ||
+        call.status === 'cancelled' ||
+        call.status === 'success' ||
+        call.status === 'error',
+    );
+
+    if (allCallsFinalOrScheduled) {
+      const callsToExecute = this.toolCalls.filter(
+        (call) => call.status === 'scheduled',
+      );
+
+      // Execute tools sequentially instead of in parallel
+      for (const toolCall of callsToExecute) {
+        if (toolCall.status !== 'scheduled' || signal.aborted) {
+          break;
+        }
+
+        const scheduledCall = toolCall;
+        const { callId, name: toolName } = scheduledCall.request;
+        this.setStatusInternal(callId, 'executing');
+
+        const liveOutputCallback =
+          scheduledCall.tool.canUpdateOutput && this.outputUpdateHandler
+            ? (outputChunk: string) => {
+                if (this.outputUpdateHandler) {
+                  this.outputUpdateHandler(callId, outputChunk);
+                }
+                this.toolCalls = this.toolCalls.map((tc) =>
+                  tc.request.callId === callId && tc.status === 'executing'
+                    ? { ...tc, liveOutput: outputChunk }
+                    : tc,
+                );
+                this.notifyToolCallsUpdate();
+              }
+            : undefined;
+
+        try {
+          const toolResult: ToolResult = await scheduledCall.tool.execute(
+            scheduledCall.request.args,
+            signal,
+            liveOutputCallback,
+          );
+
+          if (signal.aborted) {
+            this.setStatusInternal(
+              callId,
+              'cancelled',
+              'User cancelled tool execution.',
+            );
+            break;
+          }
+
+          const response = convertToFunctionResponse(
+            toolName,
+            callId,
+            toolResult.llmContent,
+          );
+
+          const successResponse: ToolCallResponseInfo = {
+            callId,
+            responseParts: response,
+            resultDisplay: toolResult.returnDisplay,
+            error: undefined,
+          };
+          this.setStatusInternal(callId, 'success', successResponse);
+
+          // Notify after each tool completion for sequential processing
+          this.notifyToolCallsUpdate();
+          
+        } catch (executionError: unknown) {
+          this.setStatusInternal(
+            callId,
+            'error',
+            createErrorResponse(
+              scheduledCall.request,
+              executionError instanceof Error
+                ? executionError
+                : new Error(String(executionError)),
+            ),
+          );
+          // Don't break on error, continue with remaining tools
+        }
+      }
+    }
+  }
+
   private attemptExecutionOfScheduledCalls(signal: AbortSignal): void {
+    // Use sequential execution for AWS Bedrock Claude compatibility
+    if (this.requiresSequentialExecution()) {
+      this.attemptSequentialExecutionOfScheduledCalls(signal).catch((error) => {
+        console.error('Error in sequential tool execution:', error);
+      });
+      return;
+    }
+
+    // Original parallel execution for other providers
     const allCallsFinalOrScheduled = this.toolCalls.every(
       (call) =>
         call.status === 'scheduled' ||
